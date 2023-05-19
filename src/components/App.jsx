@@ -4,6 +4,9 @@ import { Filter } from './Filter/Filter';
 import { nanoid } from 'nanoid';
 import { ContactList } from './ContactList/ContactList';
 import { Container, TitleOne, TitleTwo } from './App.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'store/contacts/selectors';
+import { addContacts } from 'store/contacts/actions';
 
 const initialStates = [
   { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
@@ -26,6 +29,18 @@ export const App = () => {
   const [contacts, setContacts] = useState(getInitialContacts());
   const [filter, setFilter] = useState('');
 
+
+  const dispatch = useDispatch();
+  const data = useSelector(getContacts);
+  console.log(data)
+
+  // const handleClick = () =>{
+  //   dispatch(addContacts(5))
+  // }
+
+
+
+
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
@@ -38,7 +53,7 @@ export const App = () => {
       alert(`${data.name} is already in contacts.`);
       return;
     }
-    setContacts(prevState => [{ ...data, id: nanoid() }, ...prevState]);
+    dispatch(addContacts({ id: nanoid(), ...data }))
   };
 
   const deleteContact = id => {
@@ -60,6 +75,7 @@ export const App = () => {
   return (
     <Container>
       <TitleOne>Phonebook</TitleOne>
+      {/* <button onClick={handleClick}></button> */}
       <FormContact onSubmit={listenerForm} />
       <Filter value={filter} onChange={changeFilter} />
       <TitleTwo>Contacts</TitleTwo>
