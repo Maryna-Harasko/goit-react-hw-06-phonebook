@@ -2,13 +2,18 @@ import React from "react";
 import { ContactItem } from "components/ContactItem/ContactItem";
 import PropTypes from 'prop-types';
 import { ContactsList, ListItem } from "./ContactList.styled";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getContacts } from "store/contacts/selectors";
 import { removeContact } from "store/contacts/actions";
 
-export const ContactList = ( {deleteContact} ) => {
+export const ContactList = ( ) => {
   
-  const dataContacts = useSelector(getContacts)
+  const dispatch = useDispatch();
+  const dataContacts = useSelector(getContacts);
+
+  const deleteContact = id => {
+    dispatch(removeContact(id));
+  };
 
   return (
     <ContactsList>
@@ -17,7 +22,7 @@ export const ContactList = ( {deleteContact} ) => {
         <ContactItem 
         name={contact.name}
         number={contact.number}
-        onDelete={() => deleteContact(removeContact(contact.id))}
+        onDelete={() => deleteContact((contact.id))}
         />
         </ListItem>
       ))}

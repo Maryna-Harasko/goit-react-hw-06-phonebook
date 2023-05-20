@@ -27,7 +27,7 @@ const getInitialContacts = () => {
 };
 
 export const App = () => {
-  const [contacts, setContacts] = useState(getInitialContacts());
+  // const [contacts, setContacts] = useState(getInitialContacts());
   const [filter, setFilter] = useState('');
 
 
@@ -42,9 +42,9 @@ export const App = () => {
 
 
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
   const listenerForm = data => {
     console.log(dataContacts)
@@ -67,14 +67,20 @@ export const App = () => {
   const changeFilter = event => {
     setFilter(event.currentTarget.value);
   };
-
   
   const filteredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contact =>
+    return dataContacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
+  
+  // const filteredContacts = () => {
+  //   const normalizedFilter = filter.toLowerCase();
+  //   return contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(normalizedFilter)
+  //   );
+  // };
 
   return (
     <Container>

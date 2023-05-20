@@ -16,11 +16,12 @@ export const contactsReducer = (state=initialState, action) =>{
         ...state,
          action.payload];
     case REMOVE_CONTACT:
-      const index = state.find((contact) => contact.id !== action.payload);
-      if (index !== -1) {
-        state.splice(index, 1);
-        return [...state]
-      }
+      // console.log('start', state)
+      // const updatedState = state.filter(el => el.id !== String(action.payload));
+      // console.log(action.payload);
+      // console.log('return',updatedState)
+      // return [...updatedState];
+      return state.filter(contact => contact.id !== action.payload);
     default: 
       return state;
   }
