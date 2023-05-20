@@ -1,5 +1,6 @@
-import { ADD_CONTACT } from "./constants";
+import { ADD_CONTACT, REMOVE_CONTACT } from "./constants";
 import { nanoid } from "nanoid";
+import { getContacts } from "./selectors";
 
 const initialState = [
   { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
@@ -14,6 +15,12 @@ export const contactsReducer = (state=initialState, action) =>{
       return[
         ...state,
          action.payload];
+    case REMOVE_CONTACT:
+      const index = state.find((contact) => contact.id !== action.payload);
+      if (index !== -1) {
+        state.splice(index, 1);
+        return [...state]
+      }
     default: 
       return state;
   }

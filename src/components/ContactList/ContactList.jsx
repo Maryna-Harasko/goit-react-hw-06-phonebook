@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { ContactsList, ListItem } from "./ContactList.styled";
 import { useSelector } from "react-redux";
 import { getContacts } from "store/contacts/selectors";
+import { removeContact } from "store/contacts/actions";
 
-export const ContactList = ({  deleteContact }) => {
+export const ContactList = ( {deleteContact} ) => {
   
   const dataContacts = useSelector(getContacts)
 
@@ -16,7 +17,7 @@ export const ContactList = ({  deleteContact }) => {
         <ContactItem 
         name={contact.name}
         number={contact.number}
-        onDelete={() => deleteContact(contact.id)}
+        onDelete={() => deleteContact(removeContact(contact.id))}
         />
         </ListItem>
       ))}

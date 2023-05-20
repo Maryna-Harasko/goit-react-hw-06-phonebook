@@ -7,6 +7,7 @@ import { Container, TitleOne, TitleTwo } from './App.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'store/contacts/selectors';
 import { addContacts } from 'store/contacts/actions';
+import { removeContact } from 'store/contacts/actions';
 
 const initialStates = [
   { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
@@ -31,8 +32,8 @@ export const App = () => {
 
 
   const dispatch = useDispatch();
-  const data = useSelector(getContacts);
-  console.log(data)
+  const dataContacts = useSelector(getContacts);
+  console.log(dataContacts)
 
   // const handleClick = () =>{
   //   dispatch(addContacts(5))
@@ -46,7 +47,8 @@ export const App = () => {
   }, [contacts]);
 
   const listenerForm = data => {
-    const isExist = contacts.some(
+    console.log(dataContacts)
+    const isExist = dataContacts.some(
       ({ name }) => name.toLowerCase() === data.name.toLowerCase()
     );
     if (isExist) {
@@ -57,14 +59,16 @@ export const App = () => {
   };
 
   const deleteContact = id => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== id));
+    console.log(id)
+    dispatch(removeContact(id))
+    // setContacts(prevState => prevState.filter(contact => contact.id !== id));
   };
 
   const changeFilter = event => {
     setFilter(event.currentTarget.value);
   };
 
-  console.log(filter);
+  
   const filteredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>
@@ -75,7 +79,6 @@ export const App = () => {
   return (
     <Container>
       <TitleOne>Phonebook</TitleOne>
-      {/* <button onClick={handleClick}></button> */}
       <FormContact onSubmit={listenerForm} />
       <Filter value={filter} onChange={changeFilter} />
       <TitleTwo>Contacts</TitleTwo>
