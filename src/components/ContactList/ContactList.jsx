@@ -1,42 +1,35 @@
 import React from "react";
 import { ContactItem } from "components/ContactItem/ContactItem";
-import PropTypes from 'prop-types';
 import { ContactsList, ListItem } from "./ContactList.styled";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getContacts } from "store/contacts/selectors";
-import { removeContact } from "store/contacts/actions";
+import { selectFilter } from "store/filter/selector";
 
 export const ContactList = ( ) => {
-  
-  const dispatch = useDispatch();
+ 
   const dataContacts = useSelector(getContacts);
+  const dataFilter = useSelector(selectFilter);
 
-  const deleteContact = id => {
-    dispatch(removeContact(id));
+  const filteredContacts = () => {
+    const normalizedFilter = dataFilter.toLowerCase();
+    console.log(normalizedFilter);
+    return dataContacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
   };
+
 
   return (
     <ContactsList>
-      {dataContacts.map((contact) => (
+      {filteredContacts().map((contact) => (
         <ListItem key={contact.id}>
         <ContactItem 
+        id={contact.id}
         name={contact.name}
         number={contact.number}
-        onDelete={() => deleteContact((contact.id))}
         />
         </ListItem>
       ))}
     </ContactsList>
   )
 }
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  deleteContact: PropTypes.func.isRequired,
-};

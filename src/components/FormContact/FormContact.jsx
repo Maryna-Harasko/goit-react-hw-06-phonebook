@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'store/contacts/selectors';
+import { addContacts } from 'store/contacts/reducer';
+import { nanoid } from 'nanoid';
 import {
   FormContainer,
   FormEl,
@@ -7,13 +11,23 @@ import {
   FormButton,
 } from './FormContact.styled';
 
-export const FormContact = ({ onSubmit }) => {
+export const FormContact = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleSubmit = event => {
+  const dispatch = useDispatch();
+  const dataContacts = useSelector(getContacts);
+
+  const listenerForm = event => {
     event.preventDefault();
-    onSubmit({ name, number });
+    const isExist = dataContacts.some(
+      ({ name }) => name.toLowerCase() === event.target.name.value.toLowerCase()
+    );
+    if (isExist) {
+      alert(`${event.name} is already in contacts.`);
+      return;
+    }
+    dispatch(addContacts({ id: nanoid(), name, number }));
     reset();
   };
 
@@ -24,7 +38,7 @@ export const FormContact = ({ onSubmit }) => {
 
   return (
     <FormContainer>
-      <FormEl onSubmit={handleSubmit}>
+      <FormEl onSubmit={listenerForm}>
         <FormLabel>
           Name{' '}
           <FormInput
@@ -32,7 +46,7 @@ export const FormContact = ({ onSubmit }) => {
             name="name"
             placeholder="Please enter name"
             value={name}
-            onChange={event => setName(event.target.value)}
+            onChange={({ target: { value } }) => setName(value)}
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
@@ -45,7 +59,7 @@ export const FormContact = ({ onSubmit }) => {
             name="number"
             placeholder="Please enter number"
             value={number}
-            onChange={event => setNumber(event.target.value)}
+            onChange={({ target: { value } }) => setNumber(value)}
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
